@@ -1,0 +1,27 @@
+# Cấu hình hệ thống phát hiện té ngã người cao tuổi YOLOv11-Pose
+
+camera:
+  source: 0                 # Index của Webcam (0, 1) hoặc đường dẫn file video (.mp4)
+  target_fps: 30            # Tốc độ khung hình mục tiêu
+  input_width: 640          # Kích thước chuẩn hóa đầu vào mô hình
+  input_height: 640
+
+model:
+  path: "models/yolo11n-pose.pt" # Mô hình AI chính thức YOLOv11-Pose
+  confidence_threshold: 0.45       # Ngưỡng tin cậy nhận diện người
+  device: "auto"                  # 'cpu', 'cuda', hoặc 'auto'
+
+
+fall_detection:
+  # Thuật toán lập luận thời gian thực & kháng báo động giả (VN Domain Adaptation)
+  vertical_velocity_threshold: 0.12 # Ngưỡng vận tốc ngã đột ngột theo trục đứng (Y-axis velocity)
+  bbox_aspect_ratio_threshold: 1.15  # Tỷ lệ Khung bao Width / Height (khi nằm ngang)
+  body_inclination_threshold: 45.0   # Góc nghiêng cơ thể so với phương thẳng đứng (độ)
+  consecutive_frames_trigger: 4      # Số khung hình liên tiếp xác nhận cú ngã
+  cooldown_seconds: 10               # Thời gian chờ giữa 2 lần gửi cảnh báo liên tiếp (giây)
+
+outputs:
+  raw_dir: "data/raw"
+  output_dir: "data/outputs"
+  buffer_duration_seconds: 4         # Độ dài video clip bằng chứng (giây)
+  log_file: "logs/system_events.log"

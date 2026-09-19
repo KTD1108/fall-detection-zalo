@@ -1,0 +1,9 @@
+{
+  "_comment": "Cấu hình Zalo Personal Web Automation (Gửi trực tiếp về Zalo cá nhân)",
+  "mode": "zalo_personal",
+  "enable_pc_audio_alarm": true,
+  "zalo_app_id": "3558294601924638212",
+  "zalo_access_token": "",
+  "receiver_phone_id": "Kiều Đạt",
+  "mock_save_dir": "data/outputs"
+}

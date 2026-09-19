@@ -1,0 +1,30 @@
+# Python Compiled Files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Confidential & Sensitive Personal Session Data (BẢO MẬT PHIÊN ĐĂNG NHẬP ZALO)
+zalo_browser_profile/
+*.session
+*.cookie
+*.env
+
+# Large Model Weights (Trọng số mô hình dung lượng lớn)
+models/*.pt
+models/runs/
+
+# Generated Outputs & Evidence Data
+data/outputs/*
+!data/outputs/.gitkeep
+data/raw/*
+!data/raw/.gitkeep
+
+# System Log Files
+logs/*.log
+!logs/.gitkeep
+
+# IDEs & System Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
