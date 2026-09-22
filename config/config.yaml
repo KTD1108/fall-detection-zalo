@@ -7,18 +7,20 @@ camera:
   input_height: 640
 
 model:
-  path: "models/yolo11n-pose.pt" # Mô hình AI chính thức YOLOv11-Pose
+  path: "models/best.pt"           # Mô hình AI YOLO-Pose custom vừa được thêm vào
   confidence_threshold: 0.45       # Ngưỡng tin cậy nhận diện người
   device: "auto"                  # 'cpu', 'cuda', hoặc 'auto'
 
 
+
 fall_detection:
-  # Thuật toán lập luận thời gian thực & kháng báo động giả (VN Domain Adaptation)
-  vertical_velocity_threshold: 0.12 # Ngưỡng vận tốc ngã đột ngột theo trục đứng (Y-axis velocity)
-  bbox_aspect_ratio_threshold: 1.15  # Tỷ lệ Khung bao Width / Height (khi nằm ngang)
-  body_inclination_threshold: 45.0   # Góc nghiêng cơ thể so với phương thẳng đứng (độ)
-  consecutive_frames_trigger: 4      # Số khung hình liên tiếp xác nhận cú ngã
-  cooldown_seconds: 10               # Thời gian chờ giữa 2 lần gửi cảnh báo liên tiếp (giây)
+  # Thuật toán lập luận thời gian thực & phát hiện té ngã tự động (VN Domain Adaptation)
+  vertical_velocity_threshold: 0.08 # Ngưỡng vận tốc ngã đột ngột theo trục đứng (Y-axis velocity)
+  bbox_aspect_ratio_threshold: 1.10  # Tỷ lệ Khung bao Width / Height (khi nằm ngang)
+  body_inclination_threshold: 40.0   # Góc nghiêng cơ thể so với phương thẳng đứng (độ)
+  consecutive_frames_trigger: 2      # Số khung hình liên tiếp xác nhận cú ngã (2 khung hình nhạy tức thời)
+  cooldown_seconds: 8                # Thời gian chờ giữa 2 lần gửi cảnh báo liên tiếp (giây)
+
 
 outputs:
   raw_dir: "data/raw"

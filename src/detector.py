@@ -61,12 +61,11 @@ class YOLOPoseDetector:
         # Duyệt qua các đối tượng người phát hiện
         for i in range(len(boxes)):
             cls_id = int(boxes.cls[i].item())
-            # Nhãn 0 trong COCO dataset là 'person'
-            if cls_id != 0:
-                continue
-                
-            box = boxes.xyxy[i].cpu().numpy() # [x1, y1, x2, y2]
             conf = float(boxes.conf[i].item())
+            box = boxes.xyxy[i].cpu().numpy() # [x1, y1, x2, y2]
+            
+            # Lấy tên nhãn dự đoán từ mô hình (ví dụ: 'falling', 'Sitting', 'Sleeping', 'Standing', 'Walking', 'Waving Hands' hoặc 'person')
+            class_name = self.model.names.get(cls_id, 'person')
             
             # Trích xuất 17 điểm mốc (x, y, conf)
             kpts = keypoints_data.data[i].cpu().numpy() # Shape: (17, 3) hoặc (17, 2)
@@ -78,7 +77,10 @@ class YOLOPoseDetector:
             persons.append({
                 'bbox': box,
                 'conf': conf,
+                'cls_id': cls_id,
+                'class_name': class_name,
                 'keypoints': kpts
             })
             
         return persons
+

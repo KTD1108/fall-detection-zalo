@@ -115,35 +115,38 @@ class RealtimeFallAnalyzer:
         # 3. Tính góc nghiêng thân người (Body Inclination Angle)
         body_angle = self._calculate_body_inclination((sh_x, sh_y), (hip_x, hip_y))
         
-        # 4. Phân loại tư thế (Classification Logic)
-        label = "Normal"
-        confidence = 0.85
+        # 4. Phân loại tư thế (Classification Logic kết hợp AI Model + Time-series Logic)
+        model_class_name = person_data.get('class_name', '').lower()
+        model_conf = person_data.get('conf', 0.85)
+        
+        label = person_data.get('class_name', 'Normal')
+        confidence = model_conf
         
         is_sudden_drop = v_y > self.v_threshold
         is_horizontal = aspect_ratio > self.ratio_threshold
         is_inclined = body_angle > self.angle_threshold
         
-        # --- BỘ LỌC KHÁNG BÁO ĐỘNG GIẢ (VIETNAM DOMAIN ADAPTATION) ---
-        if is_sudden_drop and (is_horizontal or is_inclined):
-            # Cú hạ thấp trọng tâm ĐỘT NGỘT + Thân người NẰM NGANG / NGHIÊNG NẶNG -> TÉ NGÃ
+        # --- BỘ LỌC KHÁNG BÁO ĐỘNG GIẢ & KẾT HỢP DỰ ĐOÁN AI ---
+        if model_class_name == 'falling' or (is_sudden_drop and (is_horizontal or is_inclined)):
+            # Mô hình AI báo 'falling' HOẶC cú hạ thấp trọng tâm ĐỘT NGỘT + NẰM NGANG/NGHIÊNG NẶNG -> TÉ NGÃ
             label = "Falling"
-            confidence = min(0.99, 0.75 + v_y * 2.0)
+            confidence = max(model_conf, min(0.99, 0.75 + v_y * 2.0))
         elif is_inclined and not is_sudden_drop:
             if aspect_ratio < 1.0 and (hip_y / frame_height) < 0.75:
-                # Thân người nghiêng nhưng di chuyển CHẬM + Hông vẫn ở trên cao -> CÚI NGƯỜI (Bending / Thắp hương / Nhặt đồ)
+                # Thân người nghiêng nhưng di chuyển CHẬM + Hông vẫn ở trên cao -> CÚI NGƯỜI (Bending)
                 label = "Bending"
                 confidence = 0.90
             elif (hip_y / frame_height) >= 0.75 and aspect_ratio < 1.2:
-                # Trọng tâm ở thấp nhưng không rơi đột ngột -> NGỒI BỆT / NGỒI XỔM (Sitting)
-                label = "Sitting"
-                confidence = 0.88
+                label = "Sitting" if model_class_name != 'sleeping' else "Sleeping"
+                confidence = max(model_conf, 0.88)
             elif is_horizontal:
-                # Nằm nghỉ trên chiếu (Lying) - di chuyển chậm không tạo cú va đập
-                label = "Lying"
-                confidence = 0.85
+                label = "Sleeping"
+                confidence = max(model_conf, 0.85)
         elif is_horizontal and not is_sudden_drop:
-            label = "Lying"
-            confidence = 0.82
+            if model_class_name != 'falling':
+                label = "Sleeping"
+                confidence = max(model_conf, 0.82)
+
             
         # 5. Xử lý bộ đếm kích hoạt cảnh báo té ngã (Trigger Accumulator & Cooldown)
         current_time = time.time()
