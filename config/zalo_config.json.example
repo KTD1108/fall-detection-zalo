@@ -1,0 +1,9 @@
+{
+  "_comment": "File cấu hình mẫu - Copy thành zalo_config.json và điền thông tin Zalo của bạn",
+  "mode": "zalo_personal",
+  "enable_pc_audio_alarm": true,
+  "zalo_app_id": "YOUR_ZALO_APP_ID",
+  "zalo_access_token": "",
+  "receiver_phone_id": "Truyền File",
+  "mock_save_dir": "data/outputs"
+}

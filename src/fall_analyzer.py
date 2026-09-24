@@ -128,7 +128,7 @@ class RealtimeFallAnalyzer:
         
         # --- BỘ LỌC KHÁNG BÁO ĐỘNG GIẢ & KẾT HỢP DỰ ĐOÁN AI ---
         if model_class_name == 'falling' or (is_sudden_drop and (is_horizontal or is_inclined)):
-            # Mô hình AI báo 'falling' HOẶC cú hạ thấp trọng tâm ĐỘT NGỘT + NẰM NGANG/NGHIÊNG NẶNG -> TÉ NGÃ
+            # Mô hình AI dự đoán 'falling' HOẶC cú hạ thấp trọng tâm ĐỘT NGỘT + NẰM NGANG/NGHIÊNG NẶNG -> TÉ NGÃ
             label = "Falling"
             confidence = max(model_conf, min(0.99, 0.75 + v_y * 2.0))
         elif is_inclined and not is_sudden_drop:
@@ -136,16 +136,16 @@ class RealtimeFallAnalyzer:
                 # Thân người nghiêng nhưng di chuyển CHẬM + Hông vẫn ở trên cao -> CÚI NGƯỜI (Bending)
                 label = "Bending"
                 confidence = 0.90
-            elif (hip_y / frame_height) >= 0.75 and aspect_ratio < 1.2:
+            elif (hip_y / frame_height) >= 0.75:
                 label = "Sitting" if model_class_name != 'sleeping' else "Sleeping"
                 confidence = max(model_conf, 0.88)
-            elif is_horizontal:
-                label = "Sleeping"
+            else:
+                label = "Sleeping" if is_horizontal else person_data.get('class_name', 'Normal')
                 confidence = max(model_conf, 0.85)
         elif is_horizontal and not is_sudden_drop:
-            if model_class_name != 'falling':
-                label = "Sleeping"
-                confidence = max(model_conf, 0.82)
+            label = "Sleeping" if model_class_name != 'falling' else "Falling"
+            confidence = max(model_conf, 0.82)
+
 
             
         # 5. Xử lý bộ đếm kích hoạt cảnh báo té ngã (Trigger Accumulator & Cooldown)

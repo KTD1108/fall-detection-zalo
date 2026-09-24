@@ -27,3 +27,7 @@ outputs:
   output_dir: "data/outputs"
   buffer_duration_seconds: 4         # Độ dài video clip bằng chứng (giây)
   log_file: "logs/system_events.log"
+
+debug:
+  enable_manual_trigger: true        # Bật/tắt phím 'f' giả lập sự cố ngã khẩn cấp khi test
+

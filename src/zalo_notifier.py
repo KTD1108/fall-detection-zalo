@@ -32,9 +32,13 @@ class ZaloNotifier:
         self._load_config()
 
     def _load_config(self):
-        if os.path.exists(self.config_path):
+        target_path = self.config_path
+        if not os.path.exists(target_path) and os.path.exists(self.config_path + ".example"):
+            target_path = self.config_path + ".example"
+
+        if os.path.exists(target_path):
             try:
-                with open(self.config_path, 'r', encoding='utf-8') as f:
+                with open(target_path, 'r', encoding='utf-8') as f:
                     cfg = json.load(f)
                     self.mode = cfg.get("mode", "mock")
                     self.enable_pc_audio_alarm = cfg.get("enable_pc_audio_alarm", True)
@@ -43,15 +47,16 @@ class ZaloNotifier:
                     self.mock_save_dir = cfg.get("mock_save_dir", "data/outputs")
                     
                 if self.logger:
-                    self.logger.info(f"Đã tải cấu hình Zalo Notifier [Mode: {self.mode}]")
+                    self.logger.info(f"Đã tải cấu hình Zalo Notifier từ [{target_path}] [Mode: {self.mode}]")
                     if self.zalo_access_token and not self.zalo_access_token.startswith("YOUR_"):
                         self.validate_token()
             except Exception as e:
                 if self.logger:
-                    self.logger.error(f"Lỗi đọc zalo_config.json: {e}. Chuyển sang chế độ 'mock'.")
+                    self.logger.error(f"Lỗi đọc file cấu hình Zalo: {e}. Chuyển sang chế độ 'mock'.")
         else:
             if self.logger:
                 self.logger.warning("Không tìm thấy file zalo_config.json, tự động khởi tạo mặc định mode 'mock'.")
+
 
     def validate_token(self):
         """Xác thực Token qua Zalo Graph API"""
@@ -121,10 +126,6 @@ class ZaloNotifier:
                 if self.logger:
                     self.logger.error(f"Lỗi gửi Zalo Personal: {e}")
                 self._send_mock_alert(alert_msg, snapshot_path, video_path)
-        elif self.mode == "telegram":
-            success = self._send_telegram_bot(alert_msg, snapshot_path, video_path)
-            if not success:
-                self._send_mock_alert(alert_msg, snapshot_path, video_path)
         elif self.mode in ["sandbox", "oa"]:
             success = self._send_zalo_api(alert_msg, snapshot_path, video_path)
             if not success:
@@ -134,46 +135,8 @@ class ZaloNotifier:
         else:
             self._send_mock_alert(alert_msg, snapshot_path, video_path)
 
-
-    def _send_telegram_bot(self, alert_msg, snapshot_path, video_path):
-        """Gửi thông báo tức thời kèm ảnh snapshot + video 3-5s về điện thoại qua Telegram Bot"""
-        telegram_token = self.zalo_access_token # Dùng chung trường token hoặc telegram_bot_token
-        chat_id = self.receiver_phone_id
-        
-        if not telegram_token or not chat_id:
-            if self.logger:
-                self.logger.error("Chưa cấu hình Telegram Bot Token hoặc Chat ID!")
-            return False
-            
-        try:
-            if self.logger:
-                self.logger.info("Đang gửi thông báo khẩn cấp + bằng chứng về điện thoại qua Telegram Bot...")
-                
-            # 1. Gửi tin nhắn text
-            url_msg = f"https://api.telegram.org/bot{telegram_token}/sendMessage"
-            requests.post(url_msg, json={"chat_id": chat_id, "text": alert_msg}, timeout=5)
-            
-            # 2. Gửi ảnh snapshot
-            if snapshot_path and os.path.exists(snapshot_path):
-                url_photo = f"https://api.telegram.org/bot{telegram_token}/sendPhoto"
-                with open(snapshot_path, 'rb') as photo_file:
-                    requests.post(url_photo, data={"chat_id": chat_id, "caption": "📸 Ảnh bằng chứng cú ngã"}, files={"photo": photo_file}, timeout=10)
-                    
-            # 3. Gửi video clip 3-5s
-            if video_path and os.path.exists(video_path):
-                url_video = f"https://api.telegram.org/bot{telegram_token}/sendVideo"
-                with open(video_path, 'rb') as video_file:
-                    requests.post(url_video, data={"chat_id": chat_id, "caption": " Clip video bằng chứng (3-5s)"}, files={"video": video_file}, timeout=15)
-                    
-            if self.logger:
-                self.logger.info(" ĐÃ GỬI THÀNH CÔNG THÔNG BÁO + ẢNH + VIDEO VỀ ĐIỆN THOẠI!")
-            return True
-        except Exception as e:
-            if self.logger:
-                self.logger.error(f"Lỗi gửi Telegram Bot: {e}")
-            return False
-
     def _send_mock_alert(self, alert_msg, snapshot_path, video_path):
+
         """Chế độ mô phỏng cảnh báo cục bộ"""
         if self.logger:
             self.logger.alert("=== [CẢNH BÁO SỰ CỐ NGÃ ĐÃ ĐƯỢC GHI NHẬN] ===")

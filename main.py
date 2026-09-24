@@ -155,10 +155,11 @@ def main():
                 # Gửi cảnh báo khẩn cấp qua Zalo API / Mock Mode
                 notifier.send_alert(snapshot_path, video_path, metrics)
                 
-        # Giả lập sự cố ngã bằng phím tắt 'f'
+        # Giả lập sự cố ngã bằng phím tắt 'f' (nếu cấu hình debug bật)
         key = cv2.waitKey(1) & 0xFF
-        if key == ord('f'):
-            logger.warning("⌨️ Người dùng nhấn phím 'f' - Giả lập sự cố ngã khẩn cấp!")
+        enable_manual_trigger = cfg.get('debug', {}).get('enable_manual_trigger', False)
+        if enable_manual_trigger and key == ord('f'):
+            logger.warning("⌨️ [DEBUG] Người dùng nhấn phím 'f' - Giả lập sự cố ngã khẩn cấp!")
             alert_banner_until = time.time() + 4.0
             snapshot_path, video_path = camera.export_evidence_clip(
                 output_dir=cfg['outputs']['output_dir'],
@@ -173,7 +174,7 @@ def main():
         
         # Thanh tiêu đề trạng thái
         cv2.rectangle(frame, (0, 0), (640, 40), (40, 40, 40), -1)
-        info_text = f"FPS: {current_fps:.1f} | Latency: {latency_ms:.1f}ms | Status: {current_label}"
+        info_text = f"FPS: {current_fps:.1f} | Latency: {latency_ms:.1f}ms | Status: {current_label} ({current_conf:.2f})"
         cv2.putText(frame, info_text, (10, 26), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 255), 2)
         
         # Nếu đang trong thời gian cảnh báo ngã -> Hiển thị Màn hình Cảnh báo Đỏ (Red Alert Banner)
@@ -194,3 +195,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

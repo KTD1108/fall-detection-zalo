@@ -5,9 +5,11 @@ __pycache__/
 
 # Confidential & Sensitive Personal Session Data (BẢO MẬT PHIÊN ĐĂNG NHẬP ZALO)
 zalo_browser_profile/
+config/zalo_config.json
 *.session
 *.cookie
 *.env
+
 
 # Large Model Weights (Trọng số mô hình dung lượng lớn)
 models/*.pt
