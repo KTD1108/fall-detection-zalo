@@ -1,4 +1,4 @@
-# Cấu hình hệ thống phát hiện té ngã người cao tuổi YOLOv26-Pose
+# Cấu hình hệ thống phát hiện té ngã người cao tuổi YOLO26-Pose
 
 camera:
   source: 0                 # Index của Webcam (0, 1) hoặc đường dẫn file video (.mp4)
