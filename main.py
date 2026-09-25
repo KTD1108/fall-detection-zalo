@@ -69,7 +69,7 @@ def draw_skeleton(frame, keypoints, bbox, label="Normal", confidence=0.0):
 
 def main():
     print("=" * 70)
-    print(" HỆ THỐNG PHÁT HIỆN TÉ NGÃ NGƯỜI CAO TUỔI (YOLOv11-POSE + ZALO API)")
+    print(" HỆ THỐNG PHÁT HIỆN TÉ NGÃ NGƯỜI CAO TUỔI (YOLOv26-POSE + ZALO API)")
     print("=" * 70)
     
     # 1. Tải cấu hình & Khởi tạo Logger
@@ -128,7 +128,7 @@ def main():
             fps_counter = 0
             start_time = time.time()
             
-        # Suy luận YOLOv11-Pose nhận diện người & 17 keypoints
+        # Suy luận YOLOv26-Pose nhận diện người & 17 keypoints
         persons = detector.detect(frame)
         
         current_label = "Normal"
@@ -186,7 +186,7 @@ def main():
                         cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 3)
 
         # Hiển thị cửa sổ OpenCV GUI
-        cv2.imshow("Fall Detection System - YOLOv11-Pose + Zalo Alert", frame)
+        cv2.imshow("Fall Detection System - YOLOv26-Pose + Zalo Alert", frame)
 
     # Giải phóng tài nguyên khi thoát
     camera.release()

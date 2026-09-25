@@ -4,11 +4,11 @@ from ultralytics import YOLO
 
 class YOLOPoseDetector:
     """
-    Phân hệ Ước lượng Tư thế & Nhận diện Mô hình AI (YOLOv11-Pose Detector)
-    - Tải mô hình YOLOv11-Pose (tự động tải trọng số pre-trained nếu chưa có).
+    Phân hệ Ước lượng Tư thế & Nhận diện Mô hình AI (YOLOv26-Pose Detector)
+    - Tải mô hình YOLOv26-Pose (tự động tải trọng số pre-trained nếu chưa có).
     - Trích xuất đồng thời Bounding Box đối tượng người và 17 điểm mốc giải phẫu (COCO Keypoints).
     """
-    def __init__(self, model_path="models/yolo11n-pose.pt", conf_threshold=0.45, device="auto", logger=None):
+    def __init__(self, model_path="models/yolo26n-pose.pt", conf_threshold=0.45, device="auto", logger=None):
         self.model_path = model_path
         self.conf_threshold = conf_threshold
         self.device = device
@@ -18,16 +18,16 @@ class YOLOPoseDetector:
         os.makedirs(os.path.dirname(self.model_path) if os.path.dirname(self.model_path) else "models", exist_ok=True)
         
         if self.logger:
-            self.logger.info(f"Đang khởi tạo mô hình YOLOv11-Pose từ [{self.model_path}]...")
+            self.logger.info(f"Đang khởi tạo mô hình YOLOv26-Pose từ [{self.model_path}]...")
             
         try:
             self.model = YOLO(self.model_path)
             if self.logger:
-                self.logger.info(" Đã tải thành công mô hình YOLOv11-Pose AI!")
+                self.logger.info(" Đã tải thành công mô hình YOLOv26-Pose AI!")
         except Exception as e:
             if self.logger:
-                self.logger.warning(f"Lỗi tải YOLOv11 ({e}). Đang tự động tải mô hình mặc định 'yolo11n-pose.pt'...")
-            self.model_path = "models/yolo11n-pose.pt"
+                self.logger.warning(f"Lỗi tải YOLOv26 ({e}). Đang tự động tải mô hình mặc định 'yolo26n-pose.pt'...")
+            self.model_path = "models/yolo26n-pose.pt"
             self.model = YOLO(self.model_path)
 
 

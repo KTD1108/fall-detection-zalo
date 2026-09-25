@@ -1,12 +1,12 @@
-# 🚨 HỆ THỐNG PHÁT HIỆN TÉ NGÃ NGƯỜI CAO TUỔI TẠI GIA ĐÌNH (YOLOv11-Pose + Zalo Alert)
+# 🚨 HỆ THỐNG PHÁT HIỆN TÉ NGÃ NGƯỜI CAO TUỔI TẠI GIA ĐÌNH (YOLOv26-Pose + Zalo Alert)
 
-Hệ thống giám sát an toàn thụ động theo thời gian thực (Real-time Passive Monitoring System), tự động phát hiện sự cố té ngã ở người cao tuổi bằng AI (YOLOv11-Pose) và gửi cảnh báo khẩn cấp (kèm 1 Ảnh Snapshot + 1 Clip Video 3–5 giây bằng chứng) trực tiếp về ứng dụng **Zalo cá nhân** của người chăm sóc.
+Hệ thống giám sát an toàn thụ động theo thời gian thực (Real-time Passive Monitoring System), tự động phát hiện sự cố té ngã ở người cao tuổi bằng AI (YOLOv26-Pose) và gửi cảnh báo khẩn cấp (kèm 1 Ảnh Snapshot + 1 Clip Video 3–5 giây bằng chứng) trực tiếp về ứng dụng **Zalo cá nhân** của người chăm sóc.
 
 ---
 
 ## 🌟 ĐẶC ĐIỂM NỔI BẬT
 
-- **AI Nhận Diện Thời Gian Thực**: Sử dụng mô hình Deep Learning **YOLOv11-Pose** trích xuất 17 điểm mốc khớp xương (COCO Keypoints) đạt tốc độ $\ge 25$ FPS.
+- **AI Nhận Diện Thời Gian Thực**: Sử dụng mô hình Deep Learning **YOLOv26-Pose** trích xuất 17 điểm mốc khớp xương (COCO Keypoints) đạt tốc độ $\ge 25$ FPS.
 - **Thuật Toán Kháng Báo Động Giả (False Alarm Prevention)**: Phân biệt chính xác té ngã thực tế với các sinh hoạt hạ thấp trọng tâm đặc thù của người Việt (ngồi bệt ăn cơm, nằm chiếu, cúi người nhặt đồ, thắp hương).
 - **Cảnh Báo Zalo Cá Nhân Tự Động**: Gửi tin nhắn cảnh báo + Ảnh bằng chứng + Clip video 3-5s qua Zalo Web Automation mà **không cần đăng ký Zalo Official Account (OA) Doanh Nghiệp**.
 - **Còi Báo Động Tại Chỗ**: Loa máy tính phát tiếng còi cảnh báo tần số cao ngay khi phát hiện sự cố.
@@ -107,11 +107,11 @@ fall-detection-zalo
 │   └── outputs                 # Thư mục lưu ảnh Snapshot và clip Video sự cố ngã
 │
 ├── models
-│   └── best.pt                 # Trọng số mô hình AI YOLOv11-Pose
+│   └── best.pt                 # Trọng số mô hình AI YOLOv26-Pose
 │
 ├── src
 │   ├── camera.py               # Quản lý luồng Webcam & Bộ đệm xoay vòng 3-5s
-│   ├── detector.py             # Trích xuất 17 điểm mốc (YOLOv11-Pose)
+│   ├── detector.py             # Trích xuất 17 điểm mốc (YOLOv26-Pose)
 │   ├── fall_analyzer.py        # Thuật toán thời gian thực & kháng báo động giả
 │   ├── zalo_notifier.py        # Phân hệ cảnh báo Zalo
 │   └── zalo_personal_automation.py # Tự động hóa gửi tin nhắn + ảnh + video qua Zalo Web
