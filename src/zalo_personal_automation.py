@@ -189,7 +189,8 @@ class ZaloPersonalAutomation:
             # 4. Gửi Video Clip 3-5s bằng chứng (nếu có)
             if video_path and os.path.exists(video_path):
                 if self._copy_file_to_clipboard(video_path):
-                    if self._paste_and_send_clipboard(driver, input_xpath, delay_before_enter=2.0):
+                    # Zalo Web cần thời gian để load video thumbnail sau khi paste
+                    if self._paste_and_send_clipboard(driver, input_xpath, delay_before_enter=4.0):
                         if self.logger:
                             self.logger.info(" Đã gửi Video Clip 3-5s bằng chứng tới Zalo!")
                     time.sleep(1.5)

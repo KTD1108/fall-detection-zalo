@@ -47,6 +47,12 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+### Bước 4: Tải mô hình AI (QUAN TRỌNG)
+Vì lý do bảo mật và dung lượng, các file `.pt` (trọng số mô hình) không được đẩy lên GitHub. 
+- Hãy chép file model YOLOv11-Pose đã train của team (`best.pt` có 6 lớp phân loại: Sitting, Sleeping, Standing, Walking, Waving Hands, falling) vào thư mục `models/` của dự án.
+- Nếu không có file này, hệ thống sẽ tự động tải model mặc định của thư viện (`yolo11n-pose.pt` - chỉ nhận diện được lớp `person`, dẫn đến phân loại tư thế sai).
+
+
 ---
 
 ## 📲 CẤU HÌNH ZALO VÀ ĐĂNG NHẬP LẦN ĐẦU

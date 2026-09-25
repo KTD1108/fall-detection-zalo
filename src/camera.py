@@ -82,13 +82,13 @@ class CameraStream:
         
         # 2. Đóng gói video clip từ toàn bộ bộ đệm khung hình (Có fallback Codec)
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        out_video = cv2.VideoWriter(video_path, fourcc, self.fps, (self.input_width, self.input_height))
+        out_video = cv2.VideoWriter(video_path, fourcc, int(self.fps), (self.input_width, self.input_height))
         
         if not out_video.isOpened():
             # Fallback sang XVID (.avi) nếu mp4v thất bại
             video_path = video_path.replace('.mp4', '.avi')
             fourcc = cv2.VideoWriter_fourcc(*'XVID')
-            out_video = cv2.VideoWriter(video_path, fourcc, self.fps, (self.input_width, self.input_height))
+            out_video = cv2.VideoWriter(video_path, fourcc, int(self.fps), (self.input_width, self.input_height))
             
         if out_video.isOpened():
             for _, frame in list(self.frame_buffer):
@@ -98,6 +98,7 @@ class CameraStream:
             if self.logger:
                 self.logger.warning("Không thể mở VideoWriter để lưu clip sự cố.")
             video_path = None
+
 
         
         if self.logger:
